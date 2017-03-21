@@ -1,0 +1,24 @@
+<form class="search-form">
+    <input type="text" name="term" #term (keyup)="searchAlbums(term.value)" class="form-control" placeholder="Search music" autocomplete="off">
+</form>
+<nav>
+    <a routerLink="/albums/" [queryParams]="{q: this.route.snapshot.queryParams['q']}" routerLinkActive="active">Albums</a>
+    <a routerLink="/tracks/" [queryParams]="{q: this.route.snapshot.queryParams['q']}" routerLinkActive="active">Tracks</a>
+</nav>
+<div *ngIf="albums" class="albums-container">
+    <div *ngFor="let album of albums | async" [class.selected]="album === selectedAlbum" (click)="showTracks(album.href)" (click)="onSelect(album)">
+        <div class="albums-container-row">
+            <img class="album-img" src="{{album.images[2].url}}">
+            <div class="links">
+            <p class="album-title">{{album.artists[0].name}} - {{album.name}}</p>
+            <p class="check-tracks"> check tracklist </p>
+            </div>
+            <div *ngIf="albumTracks && album == selectedAlbum" class="album-tracks">
+                <div *ngFor="let track of albumTracks">
+                    <div class="album-tracks-row">
+                        <a href="{{track.preview_url}}" target="_blank">{{track.track_number}}. - {{track.name}}  <span class="orange">      play </span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

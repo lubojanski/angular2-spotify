@@ -1,0 +1,23 @@
+<form class="search-form">
+    <input type="text" name="term" #term (keyup)="searchTracks(term.value)" class="form-control" autocomplete="off" placeholder="Search music">
+</form>
+<nav>
+    <a routerLink="/albums/" [queryParams]="{q: this.route.snapshot.queryParams['q']}" routerLinkActive="active">Albums</a>
+    <a routerLink="/tracks/" [queryParams]="{q: this.route.snapshot.queryParams['q']}" routerLinkActive="active">Tracks</a>
+</nav>
+<div *ngIf="relatedArtists" class="related-container">
+    related artists :
+    <div class="related-item" *ngFor="let ra of relatedArtists | async | slice:0:4 ">
+        <a routerLink="/tracks/" [queryParams]="{q: ra.name}" (click)="searchTracks(ra.name)" routerLinkActive="active">  {{ra.name}}</a>
+    </div>
+</div>
+<div *ngIf="tracks" class="tracks-container">
+    <div *ngFor="let track of tracks | async">
+        <div class="tracks-container-row">
+            <img class="album-img" src="{{track.album.images[2].url}}">
+            <div class="links">
+                <a class="track-link" href="{{track.preview_url}}" target="_self" >{{track.artists[0].name}} - {{track.name}} </a>
+                <a class="album-link" routerLink="/albums/" [queryParams]="{q: track.artists[0].name+' '+track.album.name}">{{track.album.name}}</a>
+            </div>
+        </div>
+    </div>
