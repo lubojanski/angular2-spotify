@@ -2,8 +2,7 @@ import { Component, OnInit} from '@angular/core';
 //, trigger, state, style, transition, group, animate 
 import { ActivatedRoute, Router, Params, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
-import {  Subject }           from 'rxjs/Subject';
-
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { SpotifyService } from './spotify.service';
 import { Artist} from './artist';
 import { Album} from './album';
@@ -25,7 +24,7 @@ export class AlbumsComponent implements OnInit {
     albumsTemp: Album[];
     albumTracks: Track[];
     selectedAlbum: Album;
-    private searchTerms = new Subject<string>();
+    private searchTerms = new BehaviorSubject<string>('');
     
     
     searchAlbums(term: string) { 
@@ -47,12 +46,11 @@ export class AlbumsComponent implements OnInit {
 
     ngOnInit() { 
         let urlParam = this.route.snapshot.queryParams['q'];
+
         if(urlParam){
-            setTimeout( () => {
-                this.searchTerms.next(urlParam);
-            }, 0);
+            this.searchTerms.next(urlParam);
         }
-        
+
         this.albums = this.searchTerms
         .debounceTime(300)
         .distinctUntilChanged()
@@ -60,5 +58,9 @@ export class AlbumsComponent implements OnInit {
         this.spotifyService.searchAlbums(term)
         :
         Observable.of<Album[]>([]));
+
+        
+
+
     }
 }

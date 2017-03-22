@@ -2,8 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Observable }        from 'rxjs/Observable';
-import { Subject }        from 'rxjs/Subject';
-
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { SpotifyService } from './spotify.service';
 import { Artist} from './artist';
 import { Album} from './album';
@@ -24,7 +23,7 @@ export class TracksComponent implements OnInit {
     ) { }
     tracks: Observable<Track[]>;
     relatedArtists: Observable<Artist[]>;
-    private searchTerms = new Subject<string>();
+    private searchTerms = new BehaviorSubject<string>('');
     
     searchTracks(term: string) { 
         this.searchTerms.next(term);
@@ -35,9 +34,7 @@ export class TracksComponent implements OnInit {
     ngOnInit() { 
         let urlParam = this.route.snapshot.queryParams['q'];
         if(urlParam){
-            setTimeout( () => {
                 this.searchTerms.next(urlParam);
-            }, 0);
         }
 
         this.tracks = this.searchTerms

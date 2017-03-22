@@ -15,6 +15,7 @@ display:flex;
 height:150px;
 justify-content:center;
 text-shadow:2px 2px 10px #b7ab9d;
+margin: 0 10px;
 }
 
 .outlet {
